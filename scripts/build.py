@@ -4,9 +4,9 @@
 Usage: python scripts/build.py
 
 SKILL.md is the only file to edit by hand. Everything under agents/ and
-tools/validate_flex.py is regenerated from it.
+downloads/, and tools/validate_flex.py, is regenerated from it.
 """
-import os, re, shutil
+import os, re, shutil, zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SKILL_NAME = 'miva-page-builder-flex-component-generator'
@@ -109,6 +109,12 @@ def main():
     write('gemini-cli/GEMINI.md', generic)
     write(f'cline/.clinerules/{RULE}.md', generic)
     write(f'generic/{RULE}.md', generic)
+
+    # Ready-to-upload zip for claude.ai (fixed timestamp so rebuilds don't change the file)
+    os.makedirs(os.path.join(ROOT, 'downloads'), exist_ok=True)
+    with zipfile.ZipFile(os.path.join(ROOT, 'downloads', f'{SKILL_NAME}.zip'), 'w', zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr(zipfile.ZipInfo(f'{SKILL_NAME}/SKILL.md', (2026, 1, 1, 0, 0, 0)), open(SKILL, 'rb').read())
+    print(f'  downloads/{SKILL_NAME}.zip')
 
     # Windsurf: model-decided rules, split at section boundaries to stay under the size limit
     header = f'---\ntrigger: model_decision\ndescription: {desc}\n---\n\n'
