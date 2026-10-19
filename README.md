@@ -173,3 +173,7 @@ The instructions tell the assistant to look up current Shadows source and docume
 
 - https://github.com/mivaecommerce/shadows
 - https://github.com/mivaecommerce/flex-components
+
+## License
+
+MIT. See [LICENSE](LICENSE).
